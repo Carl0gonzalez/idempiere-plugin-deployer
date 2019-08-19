@@ -6,16 +6,16 @@ This tool allows you connect to iDempiere's OSGI platform and deploy a plugin, i
 
 ```
 Usage:
-    ./deployer -h
-                [Display this help message]
-    ./deployer.sh ss -h <host> -p <port>
-                [Show plugins list]
-    ./deployer.sh id -h <host> -p <port> -n <name>
-                [Show plugin's id]
-    ./deployer.sh status -h <host> -p <port> -n <name>
-                [Show plugin's status]
-    ./deployer.sh deploy -h <host> -p <port> -n <name> -l <level> -j <jar>
-                [Deploy a plugin]
+    Display this help message:
+                ./deployer -h
+    Show plugins list:
+                ./deployer.sh ss -h <host> -p <port>
+    Show plugin's id:
+                ./deployer.sh id -h <host> -p <port> -n <name>
+    Show plugin's status:
+                ./deployer.sh status -h <host> -p <port> -n <name>
+    Deploy a plugin:
+                ./deployer.sh deploy -h <host> -p <port> -n <name> -l <level> -j <jar>
 ```
 
 ### Example:
