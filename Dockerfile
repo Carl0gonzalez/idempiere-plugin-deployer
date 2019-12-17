@@ -2,19 +2,16 @@ FROM ubuntu:18.04
 
 LABEL maintainer="saul.pina@ingeint.com"
 
-ENV DEPLOYER_HOME /idempiere
 ENV IS_DOCKER true
-
-WORKDIR $DEPLOYER_HOME
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends telnet expect && \
     rm -rf /var/lib/apt/lists/*
 
-COPY deployer.sh $DEPLOYER_HOME
-COPY docker-entrypoint.sh $DEPLOYER_HOME
+COPY deployer.sh /
+COPY docker-entrypoint.sh /
 
-RUN ln -s $DEPLOYER_HOME/deployer.sh /usr/bin/deployer
+RUN ln -s /deployer.sh /usr/bin/deployer
 
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["deployer"]
