@@ -22,7 +22,7 @@ Deploy a plugin:
 ### Example:
 
 ```
-./deployer.sh deploy -h 127.0.0.1 -p 12612 -n com.ingeint.template -l 5 -j /plugins/com.ingeint.template-6.2.0-SNAPSHOT.jar
+./deployer.sh deploy -h 127.0.0.1 -p 12612 -n com.ingeint.template -l 5 -j /plugins/com.ingeint.template-7.1.0-SNAPSHOT.jar
 ```
 
 ## Docker
@@ -46,5 +46,5 @@ Deploy a plugin:
 ### Example:
 
 ```
-docker run -it --rm --network host idempiere-deployer deploy -h 127.0.0.1 -p 12612 -n com.ingeint.template -l 5 -j /plugins/com.ingeint.template-6.2.0-SNAPSHOT.jar
+docker run -it --rm --network host idempiere-deployer deploy -h 127.0.0.1 -p 12612 -n com.ingeint.template -l 5 -j /plugins/com.ingeint.template-7.1.0-SNAPSHOT.jar
 ```
