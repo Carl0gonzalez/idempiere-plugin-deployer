@@ -118,7 +118,7 @@ function help() {
         command="docker run -it --rm --network host idempiere-deployer"
     fi
     echo "Usage:"
-    printf "    Display this help message:\n                $command -h\n"
+    printf "    Display this help message:\n                $command\n                $command -h\n"
     printf "    Show plugins list:\n                $command ss -h <host> -p <port>\n"
     printf "    Show plugin's id:\n                $command id -h <host> -p <port> -n <name>\n"
     printf "    Show plugin's status:\n                $command status -h <host> -p <port> -n <name>\n"

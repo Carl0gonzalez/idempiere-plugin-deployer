@@ -8,6 +8,7 @@ This tool allows you connect to iDempiere's OSGI platform and deploy a plugin, i
 
 ```
 Display this help message:
+            ./deployer
             ./deployer -h
 Show plugins list:
             ./deployer.sh ss -h <host> -p <port>
@@ -31,6 +32,7 @@ Deploy a plugin:
 
 ```
 Display this help message:
+            docker run -it --rm --network host idempiere-deployer
             docker run -it --rm --network host idempiere-deployer -h
 Show plugins list:
             docker run -it --rm --network host idempiere-deployer ss -h <host> -p <port>

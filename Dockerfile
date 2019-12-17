@@ -12,7 +12,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY deployer.sh $DEPLOYER_HOME
+COPY docker-entrypoint.sh $DEPLOYER_HOME
 
 RUN ln -s $DEPLOYER_HOME/deployer.sh /usr/bin/deployer
 
-ENTRYPOINT ["./deployer.sh"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD ["deployer"]
