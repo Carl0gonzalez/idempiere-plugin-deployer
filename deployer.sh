@@ -113,12 +113,16 @@ function deploy() {
 }
 
 function help() {
+    command="./deployer.sh"
+    if [[ "$IS_DOCKER" == "true" ]] ; then
+        command="docker run -it --rm --network host idempiere-deployer"
+    fi
     echo "Usage:"
-    printf "    Display this help message:\n                ./deployer -h\n"
-    printf "    Show plugins list:\n                ./deployer.sh ss -h <host> -p <port>\n"
-    printf "    Show plugin's id:\n                ./deployer.sh id -h <host> -p <port> -n <name>\n"
-    printf "    Show plugin's status:\n                ./deployer.sh status -h <host> -p <port> -n <name>\n"
-    printf "    Deploy a plugin:\n                ./deployer.sh deploy -h <host> -p <port> -n <name> -l <level> -j <jar>\n"
+    printf "    Display this help message:\n                $command -h\n"
+    printf "    Show plugins list:\n                $command ss -h <host> -p <port>\n"
+    printf "    Show plugin's id:\n                $command id -h <host> -p <port> -n <name>\n"
+    printf "    Show plugin's status:\n                $command status -h <host> -p <port> -n <name>\n"
+    printf "    Deploy a plugin:\n                $command deploy -h <host> -p <port> -n <name> -l <level> -j <jar>\n"
     exit 0
 }
 
