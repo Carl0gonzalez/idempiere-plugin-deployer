@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-LABEL maintainer="saul.pina@ingeint.com"
+LABEL maintainer="orlando.curieles@ingeint.com"
 
 ENV IS_DOCKER true
 
