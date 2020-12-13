@@ -1,3 +1,16 @@
+# Quick reference
+
+- **Maintained by**:  
+  [INGEINT](https://ingeint.com)
+
+- **Where to file issues**:  
+  [Mattermost Support Channel](https://mattermost.idempiere.org/idempiere/channels/support) or [Github Issues](https://github.com/ingeint/idempiere-plugin-deployer/issues)
+
+- **Official Links**:  
+  [Dockerhub](https://hub.docker.com/r/ingeinthub/idempiere-plugin-deployer),
+  [Github](https://github.com/ingeint/idempiere-plugin-deployer),
+  [iDempiere](https://github.com/idempiere/idempiere)
+
 # iDempiere Plugin Deployer
 
 This tool allows you connect to iDempiere's OSGI platform and deploy a plugin, it's useful for continuous integration platforms.
