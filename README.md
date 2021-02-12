@@ -15,6 +15,14 @@
 
 This tool allows you connect to iDempiere's OSGI platform and deploy a plugin, it's useful for continuous integration platforms.
 
+## Before to start
+
+Installing dependencies:
+
+```
+apt-get install telnet expect
+```
+
 ## Bash
 
 ### Usage:
