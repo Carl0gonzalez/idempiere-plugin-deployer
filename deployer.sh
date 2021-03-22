@@ -69,7 +69,7 @@ function refresh() {
     expect << EOF
 spawn telnet ${host} ${port}
 expect -re "osgi>"
-send "refresh $(getId)\r"
+send "refresh \r"
 expect -re "osgi>"
 send "disconnect\r"
 EOF
