@@ -253,7 +253,7 @@ case "$subcommand" in
         ;;
     deploy)
         while getopts ":h:p:n:l:j:" opt; do
-            case ${opt}
+            case ${opt} in
                 h )
                     host=$OPTARG
                     ;;
