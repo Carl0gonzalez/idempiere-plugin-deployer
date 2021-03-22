@@ -112,6 +112,7 @@ function deploy() {
     fi
 }
 
+<<<<<<< HEAD
 function fragment() {
     uninstall
     sleep 2
