@@ -129,12 +129,12 @@ function fragment() {
     sleep 2
     setbsl
     sleep 2
-    refresh   
+    refresh  
 
     echo "$(ss | grep "${bundleName}_")"
 
     if [[ "$(getStatus)" != "RESOLVED" ]] ; then
-        echo "Status is not active" ; exit 1
+        echo "Fragment not active" ; exit 1
     fi
 }
 
