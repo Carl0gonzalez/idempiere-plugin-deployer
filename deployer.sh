@@ -65,6 +65,16 @@ send "disconnect\r"
 EOF
 }
 
+function refresh() {
+    expect << EOF
+spawn telnet ${host} ${port}
+expect -re "osgi>"
+send "refresh file:${jarFile}\r"
+expect -re "osgi>"
+send "disconnect\r"
+EOF
+}
+
 function uninstall() {
     expect << EOF
 spawn telnet ${host} ${port}
@@ -243,7 +253,7 @@ case "$subcommand" in
         ;;
     deploy)
         while getopts ":h:p:n:l:j:" opt; do
-            case ${opt} in
+            case ${opt} inf689cd4cc221
                 h )
                     host=$OPTARG
                     ;;
