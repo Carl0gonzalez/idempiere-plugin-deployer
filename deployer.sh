@@ -112,6 +112,23 @@ function deploy() {
     fi
 }
 
+
+function deployFragment() {
+    uninstall
+    sleep 2
+    install
+    sleep 2
+    setbsl
+    sleep 2
+    refresh   
+
+    echo "$(ss | grep "${bundleName}_")"
+
+    if [[ "$(getStatus)" != "RESOLVED" ]] ; then
+        echo "Status is not active" ; exit 1
+    fi
+}
+
 function help() {
     command="./deployer.sh"
     if [[ "$IS_DOCKER" == "true" ]] ; then
