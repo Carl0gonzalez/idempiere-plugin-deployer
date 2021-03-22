@@ -69,7 +69,7 @@ function refresh() {
     expect << EOF
 spawn telnet ${host} ${port}
 expect -re "osgi>"
-send "refresh file:${jarFile}\r"
+send "refresh $(getId)\r"
 expect -re "osgi>"
 send "disconnect\r"
 EOF
@@ -253,7 +253,7 @@ case "$subcommand" in
         ;;
     deploy)
         while getopts ":h:p:n:l:j:" opt; do
-            case ${opt} inf689cd4cc221
+            case ${opt}
                 h )
                     host=$OPTARG
                     ;;
