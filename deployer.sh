@@ -112,6 +112,22 @@ function deploy() {
     fi
 }
 
+function fragment() {
+    uninstall
+    sleep 2
+    install
+    sleep 2
+    setbsl
+    sleep 2
+    refresh   
+
+    echo "$(ss | grep "${bundleName}_")"
+
+    if [[ "$(getStatus)" != "RESOLVED" ]] ; then
+        echo "Status is not active" ; exit 1
+    fi
+}
+
 function help() {
     command="./deployer.sh"
     if [[ "$IS_DOCKER" == "true" ]] ; then
@@ -260,6 +276,42 @@ case "$subcommand" in
         validateLevel
         validateJarFile
         deploy
+        ;;
+            fragment)
+        while getopts ":h:p:n:l:j:" opt; do
+            case ${opt} in
+                h )
+                    host=$OPTARG
+                    ;;
+                p )
+                    port=$OPTARG
+                    ;;
+                n )
+                    bundleName=$OPTARG
+                    ;;
+                l )
+                    level=$OPTARG
+                    ;;
+                j )
+                    jarFile=$OPTARG
+                    ;;
+                : )
+                    echo "Invalid Option: -$OPTARG requires an argument" 1>&2
+                    exit 1
+                    ;;
+                ? )
+                    echo "Invalid Option: -$OPTARG" 1>&2
+                    exit 1
+                    ;;
+            esac
+        done
+        shift $((OPTIND -1))
+        validateHost
+        validatePort
+        validateBundleName
+        validateLevel
+        validateJarFile
+        fragment
         ;;
     *)
         echo "Invalid Option: $subcommand" 1>&2
