@@ -107,14 +107,12 @@ EOF
 
 function deploy() {
     uninstall
-    sleep 2
+    sleep 1
     install
-    sleep 2
+    sleep 1
     setbsl
-    sleep 2
     start
-    sleep 2
-
+    
     echo "$(ss | grep "${bundleName}_")"
 
     if [[ "$(getStatus)" != "ACTIVE" ]] ; then
