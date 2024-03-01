@@ -120,6 +120,30 @@ function deploy() {
     fi
 }
 
+function full_deploy() {
+
+    expect << EOF
+spawn telnet ${host} ${port}
+expect -re "osgi>"
+send "uninstall $(getId)\r"
+expect -re "osgi>"
+send "install file:${jarFile}\r"
+expect -re "osgi>"
+send "setbsl ${level} $(getId)\r"
+expect -re "osgi>"
+send "start $(getId)\r"
+expect -re "osgi>"
+send "disconnect\r"
+EOF
+echo "$(ss | grep "${bundleName}_")"
+
+    if [[ "$(getStatus)" != "ACTIVE" ]] ; then
+        echo "Status is not active" ; exit 1
+    fi
+}
+
+    
+
 function fragment() {
     uninstall
     sleep 2
