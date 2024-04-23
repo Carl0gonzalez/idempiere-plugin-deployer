@@ -107,9 +107,7 @@ EOF
 
 function deploy() {
     uninstall
-    sleep 1
     install
-    sleep 1
     setbsl
     start
     
@@ -129,6 +127,8 @@ send "uninstall $(getId)\r"
 expect -re "osgi>"
 send "install file:${jarFile}\r"
 expect -re "osgi>"
+send "disconnect\r"
+spawn telnet ${host} ${port}
 send "setbsl ${level} $(getId)\r"
 expect -re "osgi>"
 send "start $(getId)\r"
