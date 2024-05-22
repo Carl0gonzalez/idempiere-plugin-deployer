@@ -2,36 +2,45 @@
 
 set -Eeo pipefail
 
+# Function to detect and rename the jar file if it contains ";singleton:=true"
+function renameJarFile() {
+    if [[ "${jarFile}" == *";singleton:=true"* ]]; then
+        newJarFile=$(echo "${jarFile}" | sed 's/;singleton:=true//')
+        mv "${jarFile}" "${newJarFile}"
+        jarFile="${newJarFile}"
+    fi
+}
+
 function validateHost() {
-    if [[ "${host}" == "" ]] ; then
+    if [[ "${host}" == "" ]]; then
         echo "Invalid Option: $subcommand requires an argument -h"
         exit 1
     fi
 }
 
 function validatePort() {
-    if [[ "${port}" == "" ]] ; then
+    if [[ "${port}" == "" ]]; then
         echo "Invalid Option: $subcommand requires an argument -p"
         exit 1
     fi
 }
 
 function validateBundleName() {
-    if [[ "${bundleName}" == "" ]] ; then
+    if [[ "${bundleName}" == "" ]]; then
         echo "Invalid Option: $subcommand requires an argument -n"
         exit 1
     fi
 }
 
 function validateLevel() {
-    if [[ "${level}" == "" ]] ; then
+    if [[ "${level}" == "" ]]; then
         echo "Invalid Option: $subcommand requires an argument -l"
         exit 1
     fi
 }
 
 function validateJarFile() {
-    if [[ "${jarFile}" == "" ]] ; then
+    if [[ "${jarFile}" == "" ]]; then
         echo "Invalid Option: $subcommand requires an argument -j"
         exit 1
     fi
@@ -44,11 +53,19 @@ expect -re "osgi>"
 send "ss\r"
 expect -re "osgi>"
 send "disconnect\r"
+expect -re "Disconnect from console\\? (y/n; default=y)"
+send "y\r"
+expect eof
 EOF
 }
 
 function getId() {
-    ss | grep "${bundleName}_" | awk '{print $1}'
+    local id=$(ss | grep "${bundleName}_" | awk '{print $1}')
+    if [[ -z "$id" ]]; then
+        echo "Error: Bundle ID not found for ${bundleName}" >&2
+        exit 1
+    fi
+    echo $id
 }
 
 function getStatus() {
@@ -62,6 +79,9 @@ expect -re "osgi>"
 send "install file:${jarFile}\r"
 expect -re "osgi>"
 send "disconnect\r"
+expect -re "Disconnect from console\\? (y/n; default=y)"
+send "y\r"
+expect eof
 EOF
 }
 
@@ -72,6 +92,9 @@ expect -re "osgi>"
 send "refresh \r"
 expect -re "osgi>"
 send "disconnect\r"
+expect -re "Disconnect from console\\? (y/n; default=y)"
+send "y\r"
+expect eof
 EOF
 }
 
@@ -82,6 +105,9 @@ expect -re "osgi>"
 send "uninstall $(getId)\r"
 expect -re "osgi>"
 send "disconnect\r"
+expect -re "Disconnect from console\\? (y/n; default=y)"
+send "y\r"
+expect eof
 EOF
 }
 
@@ -92,6 +118,9 @@ expect -re "osgi>"
 send "setbsl ${level} $(getId)\r"
 expect -re "osgi>"
 send "disconnect\r"
+expect -re "Disconnect from console\\? (y/n; default=y)"
+send "y\r"
+expect eof
 EOF
 }
 
@@ -102,24 +131,28 @@ expect -re "osgi>"
 send "start $(getId)\r"
 expect -re "osgi>"
 send "disconnect\r"
+expect -re "Disconnect from console\\? (y/n; default=y)"
+send "y\r"
+expect eof
 EOF
 }
 
 function deploy() {
+    renameJarFile
     uninstall
     install
     setbsl
     start
-    
+
     echo "$(ss | grep "${bundleName}_")"
 
-    if [[ "$(getStatus)" != "ACTIVE" ]] ; then
+    if [[ "$(getStatus)" != "ACTIVE" ]]; then
         echo "Status is not active" ; exit 1
     fi
 }
 
 function full_deploy() {
-
+    renameJarFile
     expect << EOF
 spawn telnet ${host} ${port}
 expect -re "osgi>"
@@ -128,41 +161,48 @@ expect -re "osgi>"
 send "install file:${jarFile}\r"
 expect -re "osgi>"
 send "disconnect\r"
+expect -re "Disconnect from console\\? (y/n; default=y)"
+send "y\r"
+expect eof
 spawn telnet ${host} ${port}
+expect -re "osgi>"
 send "setbsl ${level} $(getId)\r"
 expect -re "osgi>"
 send "start $(getId)\r"
 expect -re "osgi>"
 send "disconnect\r"
+expect -re "Disconnect from console\\? (y/n; default=y)"
+send "y\r"
+expect eof
 EOF
-echo "$(ss | grep "${bundleName}_")"
 
-    if [[ "$(getStatus)" != "ACTIVE" ]] ; then
+    echo "$(ss | grep "${bundleName}_")"
+
+    if [[ "$(getStatus)" != "ACTIVE" ]]; then
         echo "Status is not active" ; exit 1
     fi
 }
 
-    
-
 function fragment() {
+    renameJarFile
     uninstall
     sleep 2
     install
     sleep 2
     setbsl
     sleep 2
-    refresh  
+    refresh
 
     echo "$(ss | grep "${bundleName}_")"
 
-    if [[ "$(getStatus)" != "RESOLVED" ]] ; then
+    if [[ "$(getStatus)" != "RESOLVED" ]]; then
         echo "Fragment not active" ; exit 1
     fi
 }
 
 function help() {
     command="./deployer.sh"
-    if [[ "$IS_DOCKER" == "true" ]] ; then
+    if [[ "$IS_DOCKER" == "true" ]]; then
         command="docker run -it --rm --network host idempiere-deployer"
     fi
     echo "Usage:"
@@ -174,45 +214,45 @@ function help() {
     exit 0
 }
 
-if [[ $# == 0 ]] ; then
+if [[ $# == 0 ]]; then
     help
 fi
 
 while getopts ":h" opt; do
     case ${opt} in
-        h )
+        h)
             help
             ;;
-        ? )
+        ?)
             echo "Invalid Option: -$OPTARG" 1>&2
             exit 1
             ;;
     esac
 done
-shift $((OPTIND -1))
+shift $((OPTIND - 1))
 
 subcommand=$1; shift
 case "$subcommand" in
     ss)
         while getopts ":h:p:" opt; do
             case ${opt} in
-                h )
+                h)
                     host=$OPTARG
                     ;;
-                p )
+                p)
                     port=$OPTARG
                     ;;
-                : )
+                :)
                     echo "Invalid Option: -$OPTARG requires an argument" 1>&2
                     exit 1
                     ;;
-                ? )
+                ?)
                     echo "Invalid Option: -$OPTARG" 1>&2
                     exit 1
                     ;;
             esac
         done
-        shift $((OPTIND -1))
+        shift $((OPTIND - 1))
         validateHost
         validatePort
         ss
@@ -220,26 +260,26 @@ case "$subcommand" in
     id)
         while getopts ":h:p:n:" opt; do
             case ${opt} in
-                h )
+                h)
                     host=$OPTARG
                     ;;
-                p )
+                p)
                     port=$OPTARG
                     ;;
-                n )
+                n)
                     bundleName=$OPTARG
                     ;;
-                : )
+                :)
                     echo "Invalid Option: -$OPTARG requires an argument" 1>&2
                     exit 1
                     ;;
-                ? )
+                ?)
                     echo "Invalid Option: -$OPTARG" 1>&2
                     exit 1
                     ;;
             esac
         done
-        shift $((OPTIND -1))
+        shift $((OPTIND - 1))
         validateHost
         validatePort
         validateBundleName
@@ -248,26 +288,26 @@ case "$subcommand" in
     status)
         while getopts ":h:p:n:" opt; do
             case ${opt} in
-                h )
+                h)
                     host=$OPTARG
                     ;;
-                p )
+                p)
                     port=$OPTARG
                     ;;
-                n )
+                n)
                     bundleName=$OPTARG
                     ;;
-                : )
+                :)
                     echo "Invalid Option: -$OPTARG requires an argument" 1>&2
                     exit 1
                     ;;
-                ? )
+                ?)
                     echo "Invalid Option: -$OPTARG" 1>&2
                     exit 1
                     ;;
             esac
         done
-        shift $((OPTIND -1))
+        shift $((OPTIND - 1))
         validateHost
         validatePort
         validateBundleName
@@ -276,32 +316,32 @@ case "$subcommand" in
     deploy)
         while getopts ":h:p:n:l:j:" opt; do
             case ${opt} in
-                h )
+                h)
                     host=$OPTARG
                     ;;
-                p )
+                p)
                     port=$OPTARG
                     ;;
-                n )
+                n)
                     bundleName=$OPTARG
                     ;;
-                l )
+                l)
                     level=$OPTARG
                     ;;
-                j )
+                j)
                     jarFile=$OPTARG
                     ;;
-                : )
+                :)
                     echo "Invalid Option: -$OPTARG requires an argument" 1>&2
                     exit 1
                     ;;
-                ? )
+                ?)
                     echo "Invalid Option: -$OPTARG" 1>&2
                     exit 1
                     ;;
             esac
         done
-        shift $((OPTIND -1))
+        shift $((OPTIND - 1))
         validateHost
         validatePort
         validateBundleName
@@ -309,35 +349,35 @@ case "$subcommand" in
         validateJarFile
         deploy
         ;;
-            fragment)
+    fragment)
         while getopts ":h:p:n:l:j:" opt; do
             case ${opt} in
-                h )
+                h)
                     host=$OPTARG
                     ;;
-                p )
+                p)
                     port=$OPTARG
                     ;;
-                n )
+                n)
                     bundleName=$OPTARG
                     ;;
-                l )
+                l)
                     level=$OPTARG
                     ;;
-                j )
+                j)
                     jarFile=$OPTARG
                     ;;
-                : )
+                :)
                     echo "Invalid Option: -$OPTARG requires an argument" 1>&2
                     exit 1
                     ;;
-                ? )
+                ?)
                     echo "Invalid Option: -$OPTARG" 1>&2
                     exit 1
                     ;;
             esac
         done
-        shift $((OPTIND -1))
+        shift $((OPTIND - 1))
         validateHost
         validatePort
         validateBundleName
