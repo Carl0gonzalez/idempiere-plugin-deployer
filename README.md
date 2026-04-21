@@ -1,22 +1,23 @@
-# 📦 idempiere-plugin-deployer
+# idempiere-plugin-deployer
 
-Repositorio enfocado en **despliegue de plugins para iDempiere**, útil como apoyo para automatizar instalación o distribución de extensiones.
+Repositorio público del perfil **Carl0gonzalez**, documentado para dejar un punto de entrada más claro sobre su propósito y contenido.
 
-![iDempiere](https://img.shields.io/badge/iDempiere-plugin-0A7E8C)
+---
 
-## Descripción
+## 📌 Objetivo
 
-Su enfoque está en facilitar el proceso de empaquetado o deployment de plugins dentro del ecosistema iDempiere.
+Entregar una descripción breve y útil del repositorio para facilitar su revisión y mantenimiento.
 
-## Objetivo
+## 📁 Revisión recomendada
 
-Disponer de una base clara para simplificar y documentar la publicación de extensiones ERP.
+Clona el repositorio y revisa su estructura interna para identificar el flujo técnico, académico o experimental correspondiente.
 
-## Uso
+```bash
+git clone git@github.com:Carl0gonzalez/idempiere-plugin-deployer.git
+cd idempiere-plugin-deployer
+```
 
-Sigue la estructura del repositorio según el flujo de build o deploy implementado.
-
-## Autor
+## 👤 Autor
 
 **Carlo González**
 
